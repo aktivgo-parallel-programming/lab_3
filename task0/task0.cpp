@@ -1,7 +1,4 @@
-﻿// task0.cpp: определяет точку входа для приложения.
-//
-
-#include "task0.h"
+﻿#include "task0.h"
 
 void foo();
 
