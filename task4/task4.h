@@ -8,5 +8,6 @@
 #include <cstdlib>
 #include <ctime>
 #include <mutex>
+#include <cmath>
 
 // TODO: установите здесь ссылки на дополнительные заголовки, требующиеся для программы.

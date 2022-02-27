@@ -35,8 +35,9 @@ void foo()
     std::cout << "Thread " << std::this_thread::get_id() << " start..." << std::endl;
     for (int i = 0; i < 100; i++) {
         std::cout << "Thread id = " << std::this_thread::get_id() << std::endl;
-        std::this_thread::sleep_for(std::chrono::milliseconds (rand() % 2000 + 1000));
+        std::this_thread::sleep_for(std::chrono::milliseconds(1000 + (rand() % (2000 - 1000 + 1))));
     }
+
 
     std::cout << "Thread " << std::this_thread::get_id() << " finish!" << std::endl;
 }

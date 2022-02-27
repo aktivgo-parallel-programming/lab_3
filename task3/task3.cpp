@@ -40,14 +40,19 @@ int main()
 
 void foo(std::mutex& mx)
 {
+    std::unique_lock<std::mutex> ulmx(mx);
     std::cout << "Thread " << std::this_thread::get_id() << " start..." << std::endl;
+    ulmx.unlock();
+
     while(cnt < 100) {
-        std::this_thread::sleep_for(std::chrono::milliseconds(rand()%1000));
+        std::this_thread::sleep_for(std::chrono::milliseconds(10));
         std::lock_guard<std::mutex> lgmx(mx);
         if (cnt < 100) {
             std::cout << "Cnt for thread " << std::this_thread::get_id() << " = " << ++cnt << std::endl;
         }
     }
 
+    ulmx.lock();
     std::cout << "Thread " << std::this_thread::get_id() << " finish!" << std::endl;
+    ulmx.unlock();
 }

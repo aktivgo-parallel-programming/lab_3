@@ -26,22 +26,28 @@ int main()
     std::cin >> N;
 
     arr = create_random_array(N);
-    print_array(arr);
+    //print_array(arr);
 
     int k = N / P;
+
+    std::chrono::time_point<std::chrono::high_resolution_clock> start, end;
+    start = std::chrono::high_resolution_clock::now();
+
     for (int i = 0; i < P; i++) {
         threads[i] = std::thread(foo, k * i, k * (i + 1) - 1, ref(mx));
     }
-
-    std::unique_lock<std::mutex> ulmx(mx);
-    std::cout << "Main thread id = " << std::this_thread::get_id() << std::endl;
-    ulmx.unlock();
 
     for (int i = 0; i < P; i++) {
         threads[i].join();
     }
 
-    print_array(arr);
+    end = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<double> diff = end - start;
+
+    double time = diff.count();
+    std::cout << "Time to process: " << time << "s" << std::endl;
+
+    //print_array(arr);
 
     delete[] arr;
     delete[] threads;
@@ -52,7 +58,7 @@ int* create_random_array(int size)
 {
     int *result = new int[size];
     for (int i = 0; i < size; i++) {
-        result[i] = rand() % 1000000 + 100000;
+        result[i] = 100000 + (rand() % (1000000 - 100000 + 1));
     }
     return result;
 }
@@ -67,35 +73,41 @@ void print_array(int* array)
 
 void foo(int from, int to, std::mutex& mx)
 {
-    std::cout << "Thread " << std::this_thread::get_id() << " start..." << std::endl;
     for (int i = from; i <= to; i++) {
-        std::this_thread::sleep_for(std::chrono::milliseconds(rand()%1000));
-        std::lock_guard<std::mutex> lgmx(mx);
+        //std::this_thread::sleep_for(std::chrono::milliseconds(10));
         arr[i] = largest_prime_divisor(arr[i]);
-        std::cout << "Thread " << std::this_thread::get_id() << " arr[" << i << "] = " << arr[i] << std::endl;
+        //std::lock_guard<std::mutex> lgmx(mx);
+        //std::cout << "Thread " << std::this_thread::get_id() << " arr[" << i << "] = " << arr[i] << std::endl;
     }
-
-    std::cout << "Thread " << std::this_thread::get_id() << " finish!" << std::endl;
 }
 
-int largest_prime_divisor(int num)
+int largest_prime_divisor(int n)
 {
-    int max = 0;
-    int d = 2;
-    while (d * d <= num) {
-        if (num % d == 0) {
-            if (d > max) {
-                max = d;
-            }
-            num /= d;
-        } else {
-            d++;
+    int maxPrime = -1;
+
+    while (n % 2 == 0) {
+        maxPrime = 2;
+        n >>= 1;
+    }
+
+    while (n % 3 == 0) {
+        maxPrime = 3;
+        n /= 3;
+    }
+
+    for (int i = 5; i <= sqrt(n); i += 6) {
+        while (n % i == 0) {
+            maxPrime = i;
+            n /= i;
+        }
+        while (n % (i + 2) == 0) {
+            maxPrime = i + 2;
+            n /= i + 2;
         }
     }
 
-    if (num > 1 && num > max) {
-      max = num;
-    }
+    if (n > 4)
+        maxPrime = n;
 
-    return max;
+    return maxPrime;
 }
