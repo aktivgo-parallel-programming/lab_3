@@ -2,8 +2,8 @@
 
 int* arr;
 int N;
-int* create_random_array(int);
-void print_array(int*);
+int* create_random_vector(int);
+void print_vector(int*);
 void foo(int, int, std::mutex&);
 int largest_prime_divisor(int);
 
@@ -25,7 +25,7 @@ int main()
     std::cout << "Input N: ";
     std::cin >> N;
 
-    arr = create_random_array(N);
+    arr = create_random_vector(N);
     //print_array(arr);
 
     int k = N / P;
@@ -54,7 +54,7 @@ int main()
     return 0;
 }
 
-int* create_random_array(int size)
+int* create_random_vector(int size)
 {
     int *result = new int[size];
     for (int i = 0; i < size; i++) {
@@ -63,7 +63,7 @@ int* create_random_array(int size)
     return result;
 }
 
-void print_array(int* array)
+void print_vector(int* array)
 {
     for (int i = 0; i < N; i++) {
         std::cout << array[i] << " ";
