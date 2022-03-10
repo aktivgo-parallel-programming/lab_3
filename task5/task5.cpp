@@ -2,15 +2,15 @@
 #include "task5.h"
 
 int N;
-std::vector<int> vector;
 std::vector<std::vector<int>> matrix;
+std::vector<int> vector;
 std::vector<int> result;
 
 std::vector<int> create_random_vector(int);
 void print_vector(std::vector<int>);
 std::vector<std::vector<int>> create_random_matrix(int);
 void print_matrix(std::vector<std::vector<int>>);
-std::vector<int> multiply_sequentially(std::vector<int>, std::vector<std::vector<int>>);
+std::vector<int> multiply_sequentially(std::vector<std::vector<int>>, std::vector<int>);
 void foo(int, int, std::mutex&);
 
 int main()
@@ -31,16 +31,17 @@ int main()
     std::cout << "Input N: ";
     std::cin >> N;
 
-    vector = create_random_vector(N);
-    //print_vector(vector);
-
     matrix = create_random_matrix(N);
     //print_matrix(matrix);
+
+    vector = create_random_vector(N);
+    //print_vector(vector);
+    //std::cout << std::endl;
 
     std::chrono::time_point<std::chrono::high_resolution_clock> start, end;
     start = std::chrono::high_resolution_clock::now();
 
-    std::vector<int> res = multiply_sequentially(vector, matrix);
+    std::vector<int> res = multiply_sequentially(matrix, vector);
 
     end = std::chrono::high_resolution_clock::now();
     std::chrono::duration<double> diff = end - start;
@@ -69,7 +70,7 @@ int main()
     end = std::chrono::high_resolution_clock::now();
     diff = end - start;
 
-    //print_vector(result);
+   //print_vector(result);
 
     time = diff.count();
     std::cout << "Time to process parallel: " << time << "s" << std::endl;
@@ -118,13 +119,13 @@ void print_matrix(std::vector<std::vector<int>> m)
     std::cout << std::endl;
 }
 
-std::vector<int> multiply_sequentially(std::vector<int> v, std::vector<std::vector<int>> m) {
+std::vector<int> multiply_sequentially(std::vector<std::vector<int>> m, std::vector<int> v) {
     std::vector<int> res;
 
-    for (int i = 0; i < v.size(); i++) {
+    for (int i = 0; i < m.size(); i++) {
         res.push_back(0);
-        for (int j = 0; j < m.size(); j++) {
-            res[i] += v[j] * m[j][i];
+        for (int j = 0; j < v.size(); j++) {
+            res[i] += m[i][j] * v[j];
         }
     }
     
@@ -133,9 +134,9 @@ std::vector<int> multiply_sequentially(std::vector<int> v, std::vector<std::vect
 
 void foo(int from, int to, std::mutex& mx)
 {
-    for (int i = 0; i < vector.size(); i++) {
-        for (int j = from; j <= to; j++) {
-            result[i] += vector[j] * matrix[j][i];
+    for (int i = from; i <= to; i++) {
+        for (int j = 0; j < vector.size(); j++) {
+            result[i] += matrix[i][j] * vector[j];
         }
     }
 }
