@@ -1,5 +1,4 @@
-﻿#include <vector>
-#include "task6.h"
+﻿#include "task6.h"
 
 int N;
 std::vector<long long> sums;

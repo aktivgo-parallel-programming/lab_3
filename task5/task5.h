@@ -9,5 +9,6 @@
 #include <ctime>
 #include <mutex>
 #include <cmath>
+#include <vector>
 
 // TODO: установите здесь ссылки на дополнительные заголовки, требующиеся для программы.

@@ -1,5 +1,4 @@
-﻿#include <vector>
-#include "task5.h"
+﻿#include "task5.h"
 
 int N;
 std::vector<std::vector<int>> matrix;
